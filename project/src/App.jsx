@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { profile, experience, projects } from "./data.js";
 
 function Header() {
@@ -43,6 +44,7 @@ function About() {
       <div className="wrap">
         <div className="eyebrow">About me</div>
         <h2>A bit about me</h2>
+
         <div className="about">
           <div
             className="portrait"
@@ -111,9 +113,11 @@ function Work() {
           {projects.map((p) => (
             <article className="project" key={p.name}>
               <div className={`thumb ${p.tone}`}>{p.name}</div>
+
               <div className="body">
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
+
                 <div className="tags">
                   {p.tags.map((t) => (
                     <span key={t}>{t}</span>
@@ -139,41 +143,67 @@ function Contact() {
   });
 
   const [error, setError] = useState("");
-  const [draft, setDraft] = useState("");
-  const [note, setNote] = useState(
-    "Copy this message and send it to the email address shown beside the form."
-  );
+  const [note, setNote] = useState("");
+  const [sending, setSending] = useState(false);
 
-  const update = (e) =>
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const update = (e) => {
+    setForm((f) => ({
+      ...f,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
+
+    if (sending) return;
 
     if (!form.name.trim() || !form.message.trim()) {
       setError("Please add your name and a short message.");
-      setDraft("");
+      setNote("");
       return;
     }
 
     if (!emailPattern.test(form.email.trim())) {
       setError("Please enter a valid email address.");
-      setDraft("");
+      setNote("");
       return;
     }
 
     setError("");
-    setDraft(
-      `From: ${form.name.trim()} <${form.email.trim()}>\nSubject: ${form.type}\n\n${form.message.trim()}`
-    );
-  };
+    setNote("");
+    setSending(true);
 
-  const copy = async () => {
     try {
-      await navigator.clipboard.writeText(draft);
-      setNote("Copied successfully. You can now paste it into an email.");
-    } catch {
-      setNote("Could not copy automatically. Select the text and copy it.");
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name.trim(),
+          from_email: form.email.trim(),
+          subject: form.type,
+          message: form.message.trim(),
+        },
+        {
+          publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        }
+      );
+
+      setNote("Your message has been sent successfully!");
+
+      setForm({
+        name: "",
+        email: "",
+        type: "General Inquiry",
+        message: "",
+      });
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError(
+        "Unable to send your message. Please try again later."
+      );
+    } finally {
+      setSending(false);
     }
   };
 
@@ -276,31 +306,25 @@ function Contact() {
               />
             </label>
 
-            <div className="error" role="alert">
-              {error}
-            </div>
-
-            <button className="btn primary" type="submit">
-              Prepare my message
-            </button>
-
-            {draft && (
-              <div className="result">
-                <pre>{draft}</pre>
-
-                <div className="row">
-                  <button
-                    className="btn ghost"
-                    type="button"
-                    onClick={copy}
-                  >
-                    Copy message
-                  </button>
-
-                  <small>{note}</small>
-                </div>
+            {error && (
+              <div className="error" role="alert">
+                {error}
               </div>
             )}
+
+            {note && (
+              <div className="success" role="status">
+                {note}
+              </div>
+            )}
+
+            <button
+              className="btn primary"
+              type="submit"
+              disabled={sending}
+            >
+              {sending ? "Sending..." : "Send Message"}
+            </button>
           </form>
         </div>
       </div>
