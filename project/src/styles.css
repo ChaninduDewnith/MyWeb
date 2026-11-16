@@ -50,7 +50,7 @@ nav a:hover { background: var(--accent); color: var(--accent-fg); }
 .hero { padding-block: 48px 64px; display: grid; gap: 24px; max-width: 840px; }
 .status { display: inline-flex; gap: 10px; align-items: center; width: fit-content; background: var(--sage); border: 2px solid var(--line); padding: 6px 14px; border-radius: 10px; font-size: 14px; font-weight: 600; }
 .status::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--accent); transform: rotate(45deg); }
-.hero h1 { font-size: clamp(42px, 8vw, 84px); }
+.hero h1 { font-size: clamp(32px, 5.6vw, 58px); line-height: 1.1; }
 .hero h1 em { font-style: normal; color: var(--accent); text-decoration: underline wavy var(--butter); text-decoration-thickness: 0.09em; text-underline-offset: 0.12em; }
 .hero p.lead { font-size: 20px; color: var(--muted); max-width: 58ch; }
 .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
@@ -97,7 +97,8 @@ section > .wrap > h2 { font-size: clamp(30px, 5vw, 46px); margin-top: 10px; marg
 .contact .side p { color: var(--muted); }
 .contact .direct { display: grid; gap: 2px; margin-top: 8px; }
 .contact .direct strong { font-size: 14px; color: var(--muted); }
-.contact .direct span { font-weight: 700; user-select: all; overflow-wrap: anywhere; }
+.contact .direct a { font-weight: 700; width: fit-content; overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.contact .direct a:hover { color: var(--accent); }
 form { background: var(--surface); border: 2px solid var(--line); border-radius: 20px; box-shadow: 6px 6px 0 var(--accent); padding: 24px; display: grid; gap: 16px; min-width: 0; }
 label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
 input, select, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 2px solid var(--soft-line); border-radius: 10px; padding: 11px 14px; width: 100%; min-width: 0; }
@@ -105,6 +106,8 @@ textarea { min-height: 120px; resize: vertical; }
 input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
 .error { color: #d6285a; font-size: 14px; font-weight: 600; min-height: 1em; }
 @media (prefers-color-scheme: dark) { .error { color: #ff8fb1; } }
+.success { background: var(--sage); color: #14163a; border: 2px solid var(--line); border-radius: 10px; padding: 10px 14px; font-weight: 600; font-size: 15px; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 4px 4px 0 var(--shadow); }
 .result { background: var(--bg); border: 2px dashed var(--accent); border-radius: 14px; padding: 16px; display: grid; gap: 12px; }
 .result pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 15px; }
 .result .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
